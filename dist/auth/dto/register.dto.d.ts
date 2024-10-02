@@ -1,4 +1,4 @@
-export declare class RegisterDto {
+export declare class RegistrationDto {
     readonly email: string;
     readonly password: string;
     readonly postid: number;

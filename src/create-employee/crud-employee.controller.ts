@@ -1,6 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseFloatPipe, ParseIntPipe, Post } from '@nestjs/common';
 import { CrudEmployeeService } from './crud-employee.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
+
+import { Public } from 'src/auth/decorators/public.decorator';
 
 interface IissuePost {
     employeeId: number,
@@ -23,6 +25,12 @@ export class CrudEmployeeController {
 
         // return data.employeeId
         return this.crudEmployeeService.issueUserPost( data.employeeId, data.postId)
+    }
+
+    @Public()
+    @Get('/:id')
+    getEmployee(@Param('id', new ParseIntPipe) id: number ) {
+        return this.crudEmployeeService.getEmployeeById(id)
     }
 
     

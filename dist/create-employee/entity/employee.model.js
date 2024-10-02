@@ -68,7 +68,6 @@ __decorate([
 ], Employee.prototype, "divisionId", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => token_model_1.Token, token => token.employeeId),
-    (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Array)
 ], Employee.prototype, "token", void 0);
 __decorate([

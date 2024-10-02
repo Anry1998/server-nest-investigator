@@ -15,25 +15,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
+const login_dto_1 = require("./dto/login.dto");
 const register_dto_1 = require("./dto/register.dto");
+const public_decorator_1 = require("./decorators/public.decorator");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
     async register(registrationDto, response) {
         const registration = await this.authService.registration(registrationDto);
+        response.cookie('refresh-token', registration.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
         return registration;
     }
-    async login(registrationDto, response) {
-        const login = await this.authService.login(registrationDto);
-        response.cookie('refreshToken', login.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
+    async login(loginDto, response) {
+        const login = await this.authService.login(loginDto);
+        response.cookie('refresh-token', login.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
         return login;
     }
     async logout(request, response) {
         try {
-            const refresh = request.cookies['refreshToken'];
+            const refresh = request.cookies['refresh-token'];
             const logout = await this.authService.logout(refresh);
-            response.clearCookie('refreshToken');
+            response.clearCookie('refresh-token');
             return 'Пока, пока';
         }
         catch (e) {
@@ -42,9 +45,10 @@ let AuthController = class AuthController {
     }
     async refresh(request, response) {
         try {
-            const refresh = request.cookies['refreshToken'];
+            const refresh = request.cookies['refresh-token'];
+            console.log(refresh);
             const tokens = await this.authService.refresh(refresh);
-            response.cookie('refreshToken', tokens.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
+            response.cookie('refresh-token', tokens.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
             return tokens;
         }
         catch (e) {
@@ -52,7 +56,7 @@ let AuthController = class AuthController {
         }
     }
     async testauthGuard() {
-        return 'testauthGuard';
+        return 'testauth';
     }
 };
 exports.AuthController = AuthController;
@@ -61,7 +65,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [register_dto_1.RegisterDto, Object]),
+    __metadata("design:paramtypes", [register_dto_1.RegistrationDto, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "register", null);
 __decorate([
@@ -69,7 +73,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [register_dto_1.RegisterDto, Object]),
+    __metadata("design:paramtypes", [login_dto_1.LoginDto, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
@@ -89,12 +93,13 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "refresh", null);
 __decorate([
-    (0, common_1.Get)('/testauthguard'),
+    (0, common_1.Get)('/testauth'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "testauthGuard", null);
 exports.AuthController = AuthController = __decorate([
+    (0, public_decorator_1.Public)(),
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);

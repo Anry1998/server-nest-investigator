@@ -5,4 +5,5 @@ export declare class IncidentController {
     constructor(incidentService: IncidentService);
     createIncident(dto: CreateIncidentDto): Promise<CreateIncidentDto & import("./entity/incident.model").Incident>;
     test(): Promise<string>;
+    test2(): Promise<string>;
 }

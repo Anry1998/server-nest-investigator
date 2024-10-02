@@ -15,8 +15,8 @@ class LoginDto {
 }
 exports.LoginDto = LoginDto;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsEmail)(),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Не должно быть пустым' }),
+    (0, class_validator_1.IsEmail)({}, { message: 'Некоректный email' }),
     __metadata("design:type", String)
 ], LoginDto.prototype, "email", void 0);
 __decorate([

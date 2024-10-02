@@ -47,35 +47,17 @@ export class TokenService {
         return {accessToken, refreshToken} 
     }
 
-    async saveRefreshTokenAfterRegistration(employeeId: number, refreshToken: string) {
-        const token = await this.findRefreshToken(refreshToken);
-        this.tokenRepository.update({ employeeId: employeeId }, { refreshToken });
-        return token
+    async saveRefreshTokenAfterRefresh(tokenid: number, refreshToken: string) {
+        this.tokenRepository.update({id: tokenid }, { refreshToken: refreshToken });
     }
 
-    async saveRefreshTokenAfterLogin(employeeId: number, refreshToken: string) {
-        // Ищем в БД пользователя с указанным id 
-        // Так как в БД будет храниться до 5 refreshToken одного юзера, нам необходимо чтобы и id и refreshToken совпадали
-        const tokenData = await this.tokenRepository.findOne({
-            where: [
-                {employeeId: employeeId, refreshToken: refreshToken},
-            ]
-        })
-        // если пользователь существует перезаписываем рефреш токен и сохранеем refreshToken в БД токенов - save()
-        if (tokenData) {
-            this.tokenRepository.update({employeeId: employeeId }, { refreshToken });
-            return 'Рефреш токен был перезаписан'
-        }
-        // Реализация функции которая ищет весь перечень токенов и если их больше пяти, удалеет первый
+    async saveRefreshToken(employeeId: number, refreshToken: string) {
         const arrTokens = await this.tokenRepository.find({where: {employeeId: employeeId}})
-        if (arrTokens.length == 5) {
+        if (arrTokens.length >= 5) {
             const firstArrTokensId = arrTokens[0].id
-            const deleteFirstToken = await this.tokenRepository.delete({id: firstArrTokensId})
+            await this.tokenRepository.delete({id: firstArrTokensId})
         }
-
-        // Если пользователь с указанным токеном не найден создаем в БД токенов новые данные пользователя, куда передаем id и  рефреш токен
-        const token = await this.tokenRepository.save({userId: employeeId, refreshToken})
-        return token
+        await this.tokenRepository.save({ refreshToken: refreshToken, employeeId: employeeId})
     }
 
     validateAccessToken(token: string) {
@@ -103,7 +85,7 @@ export class TokenService {
 
     async findRefreshToken(refreshToken: string) {
         const token = await this.tokenRepository.findOne({where:{refreshToken: refreshToken}})
-        console.log('token: ',token)
+        // console.log('token: ',token)
         return token 
     }
 }

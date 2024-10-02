@@ -1,55 +1,31 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLE_KEY } from '../decorators/role';
-// import {  } from '../entity/creator';
+import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 
-import { PositionEmployee } from 'src/position-employee/entity/position-employee.model';
-PositionEmployee
-
-
-
- 
 @Injectable()
 export class RoleGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRole = this.reflector.getAllAndOverride<PositionEmployee>(ROLE_KEY, [
+
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
+    if (isPublic) return true;
+
+    let requiredRole = this.reflector.getAllAndOverride<number[]>(ROLE_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
     if (!requiredRole) {
       return true;
     }
+
     const { user } = context.switchToHttp().getRequest();
-    return user.role === requiredRole;
+    requiredRole = requiredRole.map(item => +item)
+    return user.payload.posts.some((role: any)  => requiredRole.includes(role));
   }
 }
- 
-
-
-// import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-// import { Reflector } from '@nestjs/core';
-// // import { ROLE_KEY } from '../decorators/role';
-// // import { UserRole } from '../entity/user';
-// import { Creator, UserRole } from '../entity/creator';
-// import { ROLES_KEY } from 'src/auth/decorators/role';
-
-
-
-// @Injectable()
-// export class RoleGuard implements CanActivate {
-//   constructor(private reflector: Reflector) {}
-
-//   canActivate(context: ExecutionContext): boolean {
-//     const requiredRole = this.reflector.getAllAndOverride<UserRole>(ROLES_KEY, [
-//       context.getHandler(),
-//       context.getClass(),
-//     ]);
-//     if (!requiredRole) {
-//       return true;
-//     }
-//     const { user } = context.switchToHttp().getRequest();
-//     return user.role === requiredRole;
-//   }
-// }

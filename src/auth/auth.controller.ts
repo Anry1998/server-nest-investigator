@@ -1,42 +1,47 @@
-import { Body, Controller, Get, Post, UseGuards , Req, Res, Delete,} from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards , Req, Res, Delete, UsePipes,} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { RegisterDto } from './dto/register.dto';
+import { RegistrationDto } from './dto/register.dto';
 import { AccessTokenGuard } from './guard/access-token.guard';
 import { Role } from 'src/auth/decorators/role';
 // import {  UserRoles } from './entity/creator';
 import { RoleGuard } from './guard/authorization.guard';
 
-import { RoleGuard2 } from './guard/role.guard';
+// import { RoleGuard2 } from './guard/role.guard';
 
 import { Request, Response } from 'express';
 
 
+import { Public } from 'src/auth/decorators/public.decorator';
+import { ValidationPipe } from 'src/pipes/validation.pipe';
 
+
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
   ) {}
 
+  // @UsePipes(ValidationPipe)
   @Post('/registration')
   async register(
-    @Body() registrationDto: RegisterDto,
+    @Body() registrationDto: RegistrationDto,
     @Res({ passthrough: true }) response: Response
   ) {
     const registration = await this.authService.registration(registrationDto);
-    // response.cookie('refreshToken', registration.refreshToken, {maxAge:30*24*60*60*1000, httpOnly: true })
+    response.cookie('refresh-token', registration.refreshToken, {maxAge:30*24*60*60*1000, httpOnly: true })
     return registration
   }
 
   @Post('/login')
   async login(
-    @Body() registrationDto: RegisterDto,
+    @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) response: Response
   ) {
-    const login = await this.authService.login(registrationDto); 
-    response.cookie('refreshToken', login.refreshToken, {maxAge:30*24*60*60*1000, httpOnly: true })
+    const login = await this.authService.login(loginDto); 
+    response.cookie('refresh-token', login.refreshToken, {maxAge:30*24*60*60*1000, httpOnly: true })
     return login
   }
 
@@ -46,9 +51,9 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response
   ) {
     try{
-      const refresh = request.cookies['refreshToken']
+      const refresh = request.cookies['refresh-token']
       const logout = await this.authService.logout(refresh)
-      response.clearCookie('refreshToken')
+      response.clearCookie('refresh-token')
       return 'Пока, пока'
     } catch(e) {
       console.log(e)
@@ -60,13 +65,14 @@ export class AuthController {
   async refresh(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response
-  ) {
+  ) { 
     try{
-      const refresh = request.cookies['refreshToken']
+      const refresh = request.cookies['refresh-token']
+      console.log(refresh) 
       const tokens = await this.authService.refresh(refresh)
-      response.cookie('refreshToken', tokens.refreshToken, {maxAge:30*24*60*60*1000, httpOnly: true})
+      response.cookie('refresh-token', tokens.refreshToken, {maxAge:30*24*60*60*1000, httpOnly: true})
       return tokens
-    } catch(e) {
+    } catch(e) { 
       console.log(e)
     }
   }
@@ -85,9 +91,10 @@ export class AuthController {
   // @Role(UserRole.USER) 
   // @Role(UserRole.USER)
   // @UseGuards(  AccessTokenGuard, UserRoles )
-  // @UseGuards(AccessTokenGuard, RoleGuard )
-  @Get('/testauthguard')
+  // @UseGuards(AccessTokenGuard)
+  @Get('/testauth')
   async testauthGuard() {
-    return 'testauthGuard'
+    // throw new Error('Test error')
+    return 'testauth'
   }
 }

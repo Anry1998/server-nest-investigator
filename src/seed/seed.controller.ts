@@ -1,6 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 import { SeedService } from './seed.service';
 
+import { Public } from 'src/auth/decorators/public.decorator';
+
 
 
 @Controller('seed')
@@ -38,11 +40,13 @@ export class SeedController {
         return await this.seedService.createExampleEmployes(); 
     }
 
+    @Public()
     @Get('all-seed')
     async  seedDataAll(): Promise<string> {
         return await this.seedService.allSeed()
     }
  
+    @Public()
     @Get('all-seed-test')
     async  seedDataAllTest(): Promise<string> {
         return `all-seed-test`

@@ -12,11 +12,8 @@ export declare class TokenService {
         accessToken: string;
         refreshToken: string;
     }>;
-    saveRefreshTokenAfterRegistration(employeeId: number, refreshToken: string): Promise<Token>;
-    saveRefreshTokenAfterLogin(employeeId: number, refreshToken: string): Promise<"Рефреш токен был перезаписан" | ({
-        userId: number;
-        refreshToken: string;
-    } & Token)>;
+    saveRefreshTokenAfterRefresh(tokenid: number, refreshToken: string): Promise<void>;
+    saveRefreshToken(employeeId: number, refreshToken: string): Promise<void>;
     validateAccessToken(token: string): any;
     validateRefreshToken(token: string): any;
     removeRefreshToken(refreshToken: string): Promise<import("typeorm").DeleteResult>;

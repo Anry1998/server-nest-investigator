@@ -19,6 +19,7 @@ export declare class CrudEmployeeController {
         incidents: import("../incident/entity/incident.model").Incident[];
     } & import("./entity/employee.model").Employee>;
     createPost(data: IissuePost): Promise<import("./entity/employee.model").Employee>;
+    getEmployee(id: number): Promise<import("./entity/employee.model").Employee>;
     test({ id }: any): Promise<import("./entity/employee.model").Employee>;
     getEmploe({ id }: any): Promise<import("./entity/employee.model").Employee>;
     getEmploeeByEmail({ email }: {

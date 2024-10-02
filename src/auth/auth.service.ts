@@ -4,6 +4,9 @@ import { hash, compare } from 'bcrypt';
 import { CrudEmployeeService } from '../create-employee/crud-employee.service';
 import { CreateEmployeeDto } from 'src/create-employee/dto/create-employee.dto';
 import { TokenService } from './token.service';
+import { LoginDto } from './dto/login.dto';
+import { RegistrationDto } from './dto/register.dto';
+import { InvalidCredentialsException } from './exceptions/invalid credentials.exception';
 
 export interface JWTTokens {
   accessToken: string;
@@ -34,33 +37,41 @@ export class AuthService {
     return compare(userDtoPassword, userPassword);
   }
 
-  async registration(userDto: CreateEmployeeDto) { 
+  async registration(userDto: RegistrationDto) { 
     const condidate = await this.crudEmployeeService.getEmployeeByEmail(userDto.email)
     if (condidate) {
-        throw new HttpException(`Пользователь с таким email: ${userDto.email} уже существует`, HttpStatus.BAD_REQUEST)
+      throw new InvalidCredentialsException(`Пользователь с таким email: ${userDto.email} уже существует`)
+      //  throw new HttpException(`Пользователь с таким email: ${userDto.email} уже существует`, HttpStatus.BAD_REQUEST)
     }
     const hashPassword = await this.hashPassword(userDto.password)
     const employee = await this.crudEmployeeService.createEmployee({...userDto, password: hashPassword})
-    
     const abbreviatedPostList = this.abbreviatedPostList(employee.post)
-    const tokens = await this.tokenService.generateTokens({id: employee.id, email: employee.email, posts: abbreviatedPostList } )
-    await this.tokenService.saveRefreshTokenAfterRegistration(employee.id, tokens.refreshToken)
-    return {...tokens}   
+    console.log(employee.organId)
+    const tokens = await this.tokenService.generateTokens({id: employee.id, email: employee.email, posts: abbreviatedPostList ,organId: employee.organId, divisionId: employee.divisionId} )
+    await this.tokenService.saveRefreshToken(employee.id, tokens.refreshToken)
+    delete condidate.password
+    return {...tokens, ...condidate}   
   }
 
-  async login(userDto: CreateEmployeeDto) {
+
+  async login(userDto: LoginDto) {
     const condidate = await this.crudEmployeeService.getEmployeeByEmail(userDto.email)
     if (!condidate) {
-      throw new HttpException(`Пользователь с email: ${userDto.email} не был найден`, HttpStatus.BAD_REQUEST)
+      throw new InvalidCredentialsException(`Пользователь с email: ${userDto.email} не был найден`)
+      // throw new HttpException(`Пользователь с email: ${userDto.email} не был найден`, HttpStatus.BAD_REQUEST)
     }
     const comparePassword = await this.comparePassword(userDto.password, condidate.password)
     if (!comparePassword) {
       throw new HttpException(`Введен неверный пароль`, HttpStatus.BAD_REQUEST)
     }
     const abbreviatedPostList = this.abbreviatedPostList(condidate.post)
-    const tokens = await this.tokenService.generateTokens({id: condidate.id, email: condidate.email, posts: abbreviatedPostList } )
-    await this.tokenService.saveRefreshTokenAfterLogin(condidate.id, tokens.refreshToken)
-    return {...tokens}
+    const tokens = await this.tokenService.generateTokens({id: condidate.id, email: condidate.email, posts: abbreviatedPostList, organId: condidate.organId, divisionId: condidate.divisionId } )
+    await this.tokenService.saveRefreshToken(
+      condidate.id, 
+      tokens.refreshToken
+    )
+    delete condidate.password
+    return {...tokens, ...condidate}
   }
 
   async logout(refreshToken: string) {
@@ -72,15 +83,15 @@ export class AuthService {
       throw new HttpException('Токен отсутствует', HttpStatus.FORBIDDEN)
     }
     const employeeData = await this.tokenService.validateRefreshToken(refreshToken)
-    console.log('employeeData',employeeData)
-    const tokenFromDb = await this.tokenService.findRefreshToken(refreshToken)
-    console.log('tokenFromDb', tokenFromDb)
+    const employee = await this.crudEmployeeService.getEmployeeById(employeeData.payload.id)
+    const tokenFromDb = await this.tokenService.findRefreshToken(refreshToken) 
     if (!employeeData || !tokenFromDb) {
       throw new HttpException('Ошибка авторизации', HttpStatus.FORBIDDEN)
     }
-    const tokens = await this.tokenService.generateTokens({id: employeeData.id, email: employeeData.email, posts: employeeData.post})
-    await this.tokenService.saveRefreshTokenAfterRegistration(employeeData.id, tokens.refreshToken)
-    return {...tokens}
+    const tokens = await this.tokenService.generateTokens({id: employeeData.id, email: employeeData.email, posts: employeeData.post, organId: employeeData.organId, divisionId: employeeData.divisionId})
+    await this.tokenService.saveRefreshTokenAfterRefresh(tokenFromDb.id, tokens.refreshToken)
+    delete employee.password
+    return {...tokens, ...employee}
   }
 
   // constructor(
@@ -108,7 +119,6 @@ export class AuthService {
   // }
 
  
-
   // async login(loginDto: LoginDto): Promise<JWTTokens> {
   //   const { email, password } = loginDto;
   //   const user = await this.userRepository.findOne({ where: { email } });

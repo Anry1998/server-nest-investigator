@@ -24,8 +24,8 @@ __decorate([
     __metadata("design:type", String)
 ], Token.prototype, "refreshToken", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => employee_model_1.Employee),
-    (0, typeorm_1.JoinColumn)({ name: 'employee', referencedColumnName: 'id' }),
+    (0, typeorm_1.ManyToOne)(() => employee_model_1.Employee, employee => employee.id),
+    (0, typeorm_1.JoinColumn)({ name: 'employeeId', referencedColumnName: 'id' }),
     __metadata("design:type", Number)
 ], Token.prototype, "employeeId", void 0);
 exports.Token = Token = __decorate([

@@ -65,7 +65,6 @@ export class Employee {
     divisionId: number
 
     @OneToMany(() => Token, token => token.employeeId)
-    @JoinColumn()
     token: Token[];
 
     @CreateDateColumn()

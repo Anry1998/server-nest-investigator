@@ -9,32 +9,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RegisterDto = void 0;
+exports.RegistrationDto = void 0;
 const class_validator_1 = require("class-validator");
-class RegisterDto {
+class RegistrationDto {
 }
-exports.RegisterDto = RegisterDto;
+exports.RegistrationDto = RegistrationDto;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Не должно быть пустым' }),
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
-], RegisterDto.prototype, "email", void 0);
+], RegistrationDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Length)(8),
+    (0, class_validator_1.MinLength)(5),
+    (0, class_validator_1.MaxLength)(15),
     __metadata("design:type", String)
-], RegisterDto.prototype, "password", void 0);
+], RegistrationDto.prototype, "password", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], RegisterDto.prototype, "postid", void 0);
+], RegistrationDto.prototype, "postid", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], RegisterDto.prototype, "divisionid", void 0);
+], RegistrationDto.prototype, "divisionid", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], RegisterDto.prototype, "organid", void 0);
+], RegistrationDto.prototype, "organid", void 0);
 //# sourceMappingURL=register.dto.js.map

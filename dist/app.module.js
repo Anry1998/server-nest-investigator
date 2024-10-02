@@ -26,6 +26,7 @@ const organ_module_1 = require("./organ/organ.module");
 const seed_module_1 = require("./seed/seed.module");
 const document_module_1 = require("./document/document.module");
 const document_model_1 = require("./document/entity/document.model");
+const app_gateway_1 = require("./app/app.gateway");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -67,7 +68,7 @@ exports.AppModule = AppModule = __decorate([
             document_module_1.DocumentModule
         ],
         controllers: [],
-        providers: [],
+        providers: [app_gateway_1.AppGateway],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

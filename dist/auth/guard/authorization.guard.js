@@ -13,14 +13,19 @@ exports.RoleGuard = void 0;
 const common_1 = require("@nestjs/common");
 const core_1 = require("@nestjs/core");
 const role_1 = require("../decorators/role");
-const position_employee_model_1 = require("../../position-employee/entity/position-employee.model");
-position_employee_model_1.PositionEmployee;
+const public_decorator_1 = require("../decorators/public.decorator");
 let RoleGuard = class RoleGuard {
     constructor(reflector) {
         this.reflector = reflector;
     }
     canActivate(context) {
-        const requiredRole = this.reflector.getAllAndOverride(role_1.ROLE_KEY, [
+        const isPublic = this.reflector.getAllAndOverride(public_decorator_1.IS_PUBLIC_KEY, [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+        if (isPublic)
+            return true;
+        let requiredRole = this.reflector.getAllAndOverride(role_1.ROLE_KEY, [
             context.getHandler(),
             context.getClass(),
         ]);
@@ -28,7 +33,8 @@ let RoleGuard = class RoleGuard {
             return true;
         }
         const { user } = context.switchToHttp().getRequest();
-        return user.role === requiredRole;
+        requiredRole = requiredRole.map(item => +item);
+        return user.payload.posts.some((role) => requiredRole.includes(role));
     }
 };
 exports.RoleGuard = RoleGuard;

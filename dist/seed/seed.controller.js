@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SeedController = void 0;
 const common_1 = require("@nestjs/common");
 const seed_service_1 = require("./seed.service");
+const public_decorator_1 = require("../auth/decorators/public.decorator");
 let SeedController = class SeedController {
     constructor(seedService) {
         this.seedService = seedService;
@@ -73,12 +74,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SeedController.prototype, "seedDataCreateExampleEmployes", null);
 __decorate([
+    (0, public_decorator_1.Public)(),
     (0, common_1.Get)('all-seed'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], SeedController.prototype, "seedDataAll", null);
 __decorate([
+    (0, public_decorator_1.Public)(),
     (0, common_1.Get)('all-seed-test'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),

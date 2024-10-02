@@ -7,4 +7,8 @@ export class GenerateTokensDto {
   email: string
 
   posts: number[]
+
+  organId: number
+
+  divisionId: number
 }

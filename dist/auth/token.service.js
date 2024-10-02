@@ -36,28 +36,16 @@ let TokenService = class TokenService {
         });
         return { accessToken, refreshToken };
     }
-    async saveRefreshTokenAfterRegistration(employeeId, refreshToken) {
-        const token = await this.findRefreshToken(refreshToken);
-        this.tokenRepository.update({ employeeId: employeeId }, { refreshToken });
-        return token;
+    async saveRefreshTokenAfterRefresh(tokenid, refreshToken) {
+        this.tokenRepository.update({ id: tokenid }, { refreshToken: refreshToken });
     }
-    async saveRefreshTokenAfterLogin(employeeId, refreshToken) {
-        const tokenData = await this.tokenRepository.findOne({
-            where: [
-                { employeeId: employeeId, refreshToken: refreshToken },
-            ]
-        });
-        if (tokenData) {
-            this.tokenRepository.update({ employeeId: employeeId }, { refreshToken });
-            return 'Рефреш токен был перезаписан';
-        }
+    async saveRefreshToken(employeeId, refreshToken) {
         const arrTokens = await this.tokenRepository.find({ where: { employeeId: employeeId } });
-        if (arrTokens.length == 5) {
+        if (arrTokens.length >= 5) {
             const firstArrTokensId = arrTokens[0].id;
-            const deleteFirstToken = await this.tokenRepository.delete({ id: firstArrTokensId });
+            await this.tokenRepository.delete({ id: firstArrTokensId });
         }
-        const token = await this.tokenRepository.save({ userId: employeeId, refreshToken });
-        return token;
+        await this.tokenRepository.save({ refreshToken: refreshToken, employeeId: employeeId });
     }
     validateAccessToken(token) {
         try {
@@ -83,7 +71,6 @@ let TokenService = class TokenService {
     }
     async findRefreshToken(refreshToken) {
         const token = await this.tokenRepository.findOne({ where: { refreshToken: refreshToken } });
-        console.log('token: ', token);
         return token;
     }
 };

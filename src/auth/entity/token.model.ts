@@ -15,7 +15,7 @@ export class Token {
     @Column()
     refreshToken: string;
 
-    @ManyToOne(() => Employee)
-    @JoinColumn({ name: 'employee', referencedColumnName: 'id' })
+    @ManyToOne(() => Employee, employee => employee.id)
+    @JoinColumn({ name: 'employeeId', referencedColumnName: 'id' })
     employeeId: number
 }

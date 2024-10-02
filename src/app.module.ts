@@ -25,6 +25,8 @@ import { IncidentController } from './incident/incident.controller';
 import { SeedModule } from './seed/seed.module';
 import { DocumentModule } from './document/document.module';
 import { Document } from './document/entity/document.model';
+import { AccessTokenGuard } from './auth/guard/access-token.guard';
+import { AppGateway } from './app/app.gateway';
 
 
 
@@ -82,7 +84,7 @@ import { Document } from './document/entity/document.model';
     DocumentModule
   ],
   controllers: [],
-  providers: [],
+  providers: [AppGateway],
 })
 export class AppModule {}
 

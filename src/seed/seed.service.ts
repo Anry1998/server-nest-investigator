@@ -64,19 +64,19 @@ export class SeedService {
           Logger.log('Данные успешно сохранены');
         } catch (error) {
           Logger.error(`Ошибка при заполнении данных: ${error.message}`, error.stack);
-        }
+        } 
     } 
  
     async createExampleEmployes() {
         const postData:CreateEmployeeDto[] =[
-            { email: 'employee1@.mail.ru', password: 'password', postid: 1, divisionid:1, organid:1, },
+            { email: 'andrey.britvin.983@mail.ru', password: 'Aa79628775438!',organid:1, postid: 1, divisionid:1,},
             { email: 'employee2@.mail.ru', password: 'password', organid:1, divisionid:1, postid: 1},
         ]  
         try {
             for (let i = 0; i < postData.length; i++) {
                await this.authService.registration(postData[i])
             }
-            Logger.log('Данные успешно сохранены');
+            Logger.log('Данные успешно сохранены'); 
             return 'Данные успешно сохранены'
         } catch (error) {
             Logger.error(`Ошибка при заполнении данных: ${error.message}`, error.stack);

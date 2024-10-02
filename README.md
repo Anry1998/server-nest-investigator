@@ -28,6 +28,12 @@ npm i --save-dev @types/passport-jwt
 npm i --save-dev @types/bcrypt
 
 
+-----Чат-----
+npm i --save @nestjs/websockets @nestjs/platform-socket.io
+nest g gateway app
+
+
+
 -----Миграции-----
 MIGRATION_NAME=initial-schema npm run migration:create
  
@@ -39,14 +45,6 @@ faker - хуета
 nest g mo document
 nest g co document
 nest g s document
-
-
-
-
-
-
-
-
 
 
 ## Description

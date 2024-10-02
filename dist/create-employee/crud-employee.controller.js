@@ -16,6 +16,7 @@ exports.CrudEmployeeController = void 0;
 const common_1 = require("@nestjs/common");
 const crud_employee_service_1 = require("./crud-employee.service");
 const create_employee_dto_1 = require("./dto/create-employee.dto");
+const public_decorator_1 = require("../auth/decorators/public.decorator");
 let CrudEmployeeController = class CrudEmployeeController {
     constructor(crudEmployeeService) {
         this.crudEmployeeService = crudEmployeeService;
@@ -25,6 +26,9 @@ let CrudEmployeeController = class CrudEmployeeController {
     }
     createPost(data) {
         return this.crudEmployeeService.issueUserPost(data.employeeId, data.postId);
+    }
+    getEmployee(id) {
+        return this.crudEmployeeService.getEmployeeById(id);
     }
     test({ id }) {
         return this.crudEmployeeService.fetchEmployeeById(id);
@@ -51,6 +55,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], CrudEmployeeController.prototype, "createPost", null);
+__decorate([
+    (0, public_decorator_1.Public)(),
+    (0, common_1.Get)('/:id'),
+    __param(0, (0, common_1.Param)('id', new common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], CrudEmployeeController.prototype, "getEmployee", null);
 __decorate([
     (0, common_1.Post)('/test-create-query-builder'),
     __param(0, (0, common_1.Body)()),
