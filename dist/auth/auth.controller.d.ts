@@ -15,6 +15,8 @@ export declare class AuthController {
         createTime: Date;
         post: import("../position-employee/entity/position-employee.model").PositionEmployee[];
         incidents: import("../incident/entity/incident.model").Incident[];
+        chats: import("../create-employee/entity/employee.model").Employee[];
+        messagers: import("../chats/entity/message.model").Messagers[];
         accessToken: string;
         refreshToken: string;
     }>;
@@ -28,6 +30,8 @@ export declare class AuthController {
         createTime: Date;
         post: import("../position-employee/entity/position-employee.model").PositionEmployee[];
         incidents: import("../incident/entity/incident.model").Incident[];
+        chats: import("../create-employee/entity/employee.model").Employee[];
+        messagers: import("../chats/entity/message.model").Messagers[];
         accessToken: string;
         refreshToken: string;
     }>;
@@ -42,6 +46,8 @@ export declare class AuthController {
         createTime: Date;
         post: import("../position-employee/entity/position-employee.model").PositionEmployee[];
         incidents: import("../incident/entity/incident.model").Incident[];
+        chats: import("../create-employee/entity/employee.model").Employee[];
+        messagers: import("../chats/entity/message.model").Messagers[];
         accessToken: string;
         refreshToken: string;
     }>;

@@ -2,7 +2,7 @@ npm run start:dev
 npm run start:prod
 npm run build
 npm run seeding:test
-npm run execute
+npm run execute 
 
 -----Docker-----
 docker-compose up -d
@@ -10,7 +10,7 @@ docker-compose down
 
 -----Зависимости-----
 npm i --save @nestjs/config
-
+ 
 npm i cookie-parser
 npm i -D @types/cookie-parser
 
@@ -32,6 +32,8 @@ npm i --save-dev @types/bcrypt
 npm i --save @nestjs/websockets @nestjs/platform-socket.io
 nest g gateway app
 
+npm i socket.io-client
+ 
 
 
 -----Миграции-----
@@ -42,9 +44,9 @@ npm i typeorm-extension @faker-js/faker
 faker - хуета
 
 -----CLI-----
-nest g mo document
-nest g co document
-nest g s document
+nest g mo test
+nest g co test
+nest g s test
 
 
 ## Description

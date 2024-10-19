@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, ParseFloatPipe, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, Param, ParseFloatPipe, ParseIntPipe, Post, UseInterceptors } from '@nestjs/common';
 import { CrudEmployeeService } from './crud-employee.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 
 import { Public } from 'src/auth/decorators/public.decorator';
+import { Employee } from './entity/employee.model';
 
 interface IissuePost {
     employeeId: number,
@@ -27,9 +28,12 @@ export class CrudEmployeeController {
         return this.crudEmployeeService.issueUserPost( data.employeeId, data.postId)
     }
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @Public()
     @Get('/:id')
     getEmployee(@Param('id', new ParseIntPipe) id: number ) {
+        // const employee = await this.crudEmployeeService.getEmployeeById(id)
+        // if (employee) return new Employee(employee)
         return this.crudEmployeeService.getEmployeeById(id)
     }
 

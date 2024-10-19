@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ExecutionContext, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { PassportStrategy } from '@nestjs/passport';
@@ -15,7 +15,10 @@ type JwtPayload = {
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   isPublic: boolean
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    // private reflector: Reflector
+  ) {
     super({
       // перехватываем аксес токен из http запроса
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -24,6 +27,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   validate(payload: JwtPayload) {
+    console.log("payload: ", payload)
     return payload;
   }
 }

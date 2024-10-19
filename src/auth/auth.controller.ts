@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards , Req, Res, Delete, UsePipes,} from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards , Req, Res, Delete, UsePipes, UseInterceptors, ClassSerializerInterceptor,} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
@@ -6,7 +6,7 @@ import { RegistrationDto } from './dto/register.dto';
 import { AccessTokenGuard } from './guard/access-token.guard';
 import { Role } from 'src/auth/decorators/role';
 // import {  UserRoles } from './entity/creator';
-import { RoleGuard } from './guard/authorization.guard';
+import { PostGuard } from './guard/post.guard';
 
 // import { RoleGuard2 } from './guard/role.guard';
 
@@ -35,8 +35,9 @@ export class AuthController {
     return registration
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post('/login')
-  async login(
+  async login( 
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) response: Response
   ) {

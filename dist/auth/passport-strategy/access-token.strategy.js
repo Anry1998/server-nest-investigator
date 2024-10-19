@@ -23,6 +23,7 @@ let AccessTokenStrategy = class AccessTokenStrategy extends (0, passport_1.Passp
         this.configService = configService;
     }
     validate(payload) {
+        console.log("payload: ", payload);
         return payload;
     }
 };

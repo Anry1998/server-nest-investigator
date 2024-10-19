@@ -17,6 +17,9 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Document } from '../../document/entity/document.model';
+import { Chat } from 'src/chats/entity/chat.model';
+import { Messagers } from 'src/chats/entity/message.model';
+import { Exclude } from 'class-transformer';
 
 export enum Rank {
     PRIVATE = 'рядовой',
@@ -41,12 +44,19 @@ export enum Rank {
 
 @Entity({ name: 'employee' })
 export class Employee {
+
+    constructor(partial: Partial<Employee>) {
+        Object.assign(this, partial);
+    }
+
     @PrimaryGeneratedColumn('increment')
     id: number;
   
     @Column()
     email: string;
 
+
+    // @Exclude()
     @Column()
     password: string;
 
@@ -94,6 +104,45 @@ export class Employee {
     incidents: Incident[];
 
 
-    
+    // @ManyToMany(() => Chat)
+    // @JoinTable({
+    //     name: "employes_chats",
+    //     joinColumn: { name: "employeeId", referencedColumnName: "id" },
+    //     inverseJoinColumn: { name: "chatId" }
+    //   })
+    // chats: Chat[];
+
+
+    @ManyToMany(() => Chat, )
+    // @JoinColumn({ name: 'chat-employee', referencedColumnName: 'id' })
+    chats: Employee[]; 
+
+
+    @OneToMany(() => Messagers, messagers => messagers.employeeId)
+    messagers: Messagers[];
+
+    // @OneToMany(() => Token, token => token.employeeId)
+    // token: Token[];   
 }
 
+
+export class SerializationEmployee{
+    id: number;
+    email: string;
+
+    @Exclude()
+    password: string
+
+    organId: number
+    divisionId: number
+    token: Token[];
+    createTime: Date;
+    post: PositionEmployee[];
+    incidents: Incident[];
+    chats: Employee[];
+    messagers: Messagers[];
+
+    constructor(partial: Partial<SerializationEmployee>) {
+        Object.assign(this, partial);
+      }
+}

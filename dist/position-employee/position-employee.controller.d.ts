@@ -9,9 +9,9 @@ export declare class PositionEmployeeController {
     constructor(positionEmployeeService: PositionEmployeeService);
     create(dto: CreatePositionEmployeeDto): Promise<CreatePositionEmployeeDto & import("./entity/position-employee.model").PositionEmployee>;
     getByValue(value: string): Promise<import("./entity/position-employee.model").PositionEmployee>;
-    issuePost(data: IissuePost): Promise<import("../create-employee/entity/employee.model").Employee>;
-    deletePost(data: IissuePost): Promise<import("../create-employee/entity/employee.model").Employee>;
-    deleteAllPosts(data: IissuePost): Promise<import("../create-employee/entity/employee.model").Employee>;
+    issuePost(data: IissuePost): Promise<import("../create-employee/entity/employee.model").SerializationEmployee>;
+    deletePost(data: IissuePost): Promise<import("../create-employee/entity/employee.model").SerializationEmployee>;
+    deleteAllPosts(data: IissuePost): Promise<import("../create-employee/entity/employee.model").SerializationEmployee>;
     getAllEmployeePost({ employeeId }: any): Promise<import("./entity/position-employee.model").PositionEmployee[]>;
     test({ id }: any): Promise<import("./entity/position-employee.model").PositionEmployee>;
 }

@@ -26,9 +26,17 @@ import { SeedModule } from './seed/seed.module';
 import { DocumentModule } from './document/document.module';
 import { Document } from './document/entity/document.model';
 import { AccessTokenGuard } from './auth/guard/access-token.guard';
-import { AppGateway } from './app/app.gateway';
+import { ChatModule } from './chats/chat.module';
+import { Chat } from './chats/entity/chat.model';
+import { Messagers } from './chats/entity/message.model';
+import { TestModule } from './test/test.module';
+import { EmployeeTest } from './test/entity/test.model';
+import { SocketId } from './chats/entity/socket-id.model';
 
 
+
+
+ 
 
 
 
@@ -36,7 +44,7 @@ import { AppGateway } from './app/app.gateway';
 
 @Module({
   imports: [ 
-    forwardRef(() => ConfigModule.forRoot({ isGlobal: true,  validate})),
+    // forwardRef(() => ConfigModule.forRoot({ isGlobal: true,  validate})),
     ConfigModule.forRoot({ isGlobal: true,  validate}),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -58,6 +66,11 @@ import { AppGateway } from './app/app.gateway';
           Employee, 
           Token,
           Document, 
+          Chat,
+          Messagers,
+          EmployeeTest,
+          SocketId,
+
         ],  
         synchronize: true, 
         // synchronize: configService.get<boolean>('DB_SYNCHRONIZATION'),
@@ -81,10 +94,13 @@ import { AppGateway } from './app/app.gateway';
     OrganModule,
     SeedModule, 
     // SeedtestModule, 
-    DocumentModule
+    DocumentModule,
+    ChatModule,
+ 
+  
   ],
   controllers: [],
-  providers: [AppGateway],
+  providers: [],
 })
 export class AppModule {}
 

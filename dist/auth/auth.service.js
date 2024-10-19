@@ -44,12 +44,12 @@ let AuthService = class AuthService {
         }
         const hashPassword = await this.hashPassword(userDto.password);
         const employee = await this.crudEmployeeService.createEmployee({ ...userDto, password: hashPassword });
+        const employeeEnd = await this.crudEmployeeService.getEmployeeById(employee.id);
         const abbreviatedPostList = this.abbreviatedPostList(employee.post);
-        console.log(employee.organId);
         const tokens = await this.tokenService.generateTokens({ id: employee.id, email: employee.email, posts: abbreviatedPostList, organId: employee.organId, divisionId: employee.divisionId });
         await this.tokenService.saveRefreshToken(employee.id, tokens.refreshToken);
-        delete condidate.password;
-        return { ...tokens, ...condidate };
+        delete employeeEnd.password;
+        return { ...tokens, ...employeeEnd };
     }
     async login(userDto) {
         const condidate = await this.crudEmployeeService.getEmployeeByEmail(userDto.email);
@@ -76,13 +76,15 @@ let AuthService = class AuthService {
         const employeeData = await this.tokenService.validateRefreshToken(refreshToken);
         const employee = await this.crudEmployeeService.getEmployeeById(employeeData.payload.id);
         const tokenFromDb = await this.tokenService.findRefreshToken(refreshToken);
-        if (!employeeData || !tokenFromDb) {
+        if (!employeeData || !tokenFromDb || !employee) {
             throw new common_1.HttpException('Ошибка авторизации', common_1.HttpStatus.FORBIDDEN);
         }
-        const tokens = await this.tokenService.generateTokens({ id: employeeData.id, email: employeeData.email, posts: employeeData.post, organId: employeeData.organId, divisionId: employeeData.divisionId });
-        await this.tokenService.saveRefreshTokenAfterRefresh(tokenFromDb.id, tokens.refreshToken);
+        const tokens = await this.tokenService.generateTokens({ id: employeeData.payload.id, email: employeeData.payload.email, posts: employeeData.payload.post, organId: employeeData.payload.organId, divisionId: employeeData.payload.divisionId });
+        await this.tokenService.saveTokenAfterRefresh(tokenFromDb.id, tokens.refreshToken);
         delete employee.password;
         return { ...tokens, ...employee };
+    }
+    async getEmployeeId(refreshToken) {
     }
 };
 exports.AuthService = AuthService;

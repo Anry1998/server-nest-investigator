@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Incident } from './entity/incident.model';
 import { OrganModule } from '../organ/organ.module';
 
+
 @Module({
   controllers: [IncidentController],
   providers: [IncidentService],

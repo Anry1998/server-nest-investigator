@@ -9,13 +9,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Employee = exports.Rank = void 0;
+exports.SerializationEmployee = exports.Employee = exports.Rank = void 0;
 const token_model_1 = require("../../auth/entity/token.model");
 const division_model_1 = require("../../division/entity/division.model");
 const incident_model_1 = require("../../incident/entity/incident.model");
 const organ_model_1 = require("../../organ/entity/organ.model");
 const position_employee_model_1 = require("../../position-employee/entity/position-employee.model");
 const typeorm_1 = require("typeorm");
+const chat_model_1 = require("../../chats/entity/chat.model");
+const message_model_1 = require("../../chats/entity/message.model");
+const class_transformer_1 = require("class-transformer");
 var Rank;
 (function (Rank) {
     Rank["PRIVATE"] = "\u0440\u044F\u0434\u043E\u0432\u043E\u0439";
@@ -36,6 +39,9 @@ var Rank;
     Rank["GENERAL"] = "\u0433\u0435\u043D\u0435\u0440\u0430\u043B";
 })(Rank || (exports.Rank = Rank = {}));
 let Employee = class Employee {
+    constructor(partial) {
+        Object.assign(this, partial);
+    }
 };
 exports.Employee = Employee;
 __decorate([
@@ -95,7 +101,26 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], Employee.prototype, "incidents", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => chat_model_1.Chat),
+    __metadata("design:type", Array)
+], Employee.prototype, "chats", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => message_model_1.Messagers, messagers => messagers.employeeId),
+    __metadata("design:type", Array)
+], Employee.prototype, "messagers", void 0);
 exports.Employee = Employee = __decorate([
-    (0, typeorm_1.Entity)({ name: 'employee' })
+    (0, typeorm_1.Entity)({ name: 'employee' }),
+    __metadata("design:paramtypes", [Object])
 ], Employee);
+class SerializationEmployee {
+    constructor(partial) {
+        Object.assign(this, partial);
+    }
+}
+exports.SerializationEmployee = SerializationEmployee;
+__decorate([
+    (0, class_transformer_1.Exclude)(),
+    __metadata("design:type", String)
+], SerializationEmployee.prototype, "password", void 0);
 //# sourceMappingURL=employee.model.js.map

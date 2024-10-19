@@ -1,5 +1,6 @@
 import { CrudEmployeeService } from './crud-employee.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { Employee } from './entity/employee.model';
 interface IissuePost {
     employeeId: number;
     postId: number;
@@ -7,23 +8,13 @@ interface IissuePost {
 export declare class CrudEmployeeController {
     private crudEmployeeService;
     constructor(crudEmployeeService: CrudEmployeeService);
-    createEmployee(employeeDto: CreateEmployeeDto): Promise<{
-        post: any[];
-        id: number;
-        email: string;
-        password: string;
-        organId: number;
-        divisionId: number;
-        token: import("../auth/entity/token.model").Token[];
-        createTime: Date;
-        incidents: import("../incident/entity/incident.model").Incident[];
-    } & import("./entity/employee.model").Employee>;
-    createPost(data: IissuePost): Promise<import("./entity/employee.model").Employee>;
-    getEmployee(id: number): Promise<import("./entity/employee.model").Employee>;
-    test({ id }: any): Promise<import("./entity/employee.model").Employee>;
-    getEmploe({ id }: any): Promise<import("./entity/employee.model").Employee>;
+    createEmployee(employeeDto: CreateEmployeeDto): Promise<Employee>;
+    createPost(data: IissuePost): Promise<import("./entity/employee.model").SerializationEmployee>;
+    getEmployee(id: number): Promise<import("./entity/employee.model").SerializationEmployee>;
+    test({ id }: any): Promise<Employee>;
+    getEmploe({ id }: any): Promise<Employee>;
     getEmploeeByEmail({ email }: {
         email: any;
-    }): Promise<import("./entity/employee.model").Employee>;
+    }): Promise<Employee>;
 }
 export {};

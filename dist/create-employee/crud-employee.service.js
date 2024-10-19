@@ -80,6 +80,7 @@ let CrudEmployeeService = class CrudEmployeeService {
         return employee;
     }
     async getEmployeeById(employeeId) {
+        console.log('employeeId: ', employeeId);
         try {
             const employee = await this.employeeRepository.findOne({
                 where: { id: employeeId },
@@ -88,7 +89,7 @@ let CrudEmployeeService = class CrudEmployeeService {
             if (!employee) {
                 throw new Error('Employee not found');
             }
-            return employee;
+            return new employee_model_1.SerializationEmployee(employee);
         }
         catch (e) {
             console.log(e);

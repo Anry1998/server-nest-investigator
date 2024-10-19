@@ -1,5 +1,5 @@
 // ----------- Модули nestjs ----------- //
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ClassSerializerInterceptor, Injectable, NotFoundException, UseInterceptors } from '@nestjs/common';
 
 // ----------- Установленные пакеты  ----------- //
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,7 +9,7 @@ import { Repository, SelectQueryBuilder, createQueryBuilder } from 'typeorm';
 import { PositionEmployeeService } from '../position-employee/position-employee.service';
 
 // ----------- Схемы  ----------- //
-import { Employee } from './entity/employee.model';
+import { Employee, SerializationEmployee } from './entity/employee.model';
 
 
 // ----------- DTO  ----------- //
@@ -17,9 +17,6 @@ import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { OrganService } from '../organ/organ.service';
 import { Organ } from '../organ/entity/organ.model';
 import { DivisionService } from '../division/division.service';
-
-
-
 
 
 @Injectable()
@@ -67,7 +64,7 @@ export class CrudEmployeeService {
         return notes;
     }
 
-    async createEmployee(dto: CreateEmployeeDto) {
+    async createEmployee(dto: CreateEmployeeDto): Promise<Employee> {
         const organ = await this.organService.getOrganById(dto.organid)
         
         const division = await this.divisionService.getDivisionById(dto.divisionid)
@@ -100,7 +97,7 @@ export class CrudEmployeeService {
         
     }
 
-    async getEmployeeByEmail(email: string) {
+    async getEmployeeByEmail(email: string): Promise<Employee> {
         const employee = await this.employeeRepository.findOne({
             where: [{email: email}]
         })
@@ -112,15 +109,17 @@ export class CrudEmployeeService {
     }
 
     async getEmployeeById(employeeId: number) {
+        console.log('employeeId: ', employeeId)
         try {
             const employee = await this.employeeRepository.findOne({
                 where: {id: employeeId},
-                relations: ['post'], // Загрузите информацию о должностях для студента
-            })
+                relations: ['post'], // Загрузите информацию о должностях
+            }) 
             if (!employee) {
                 throw new Error('Employee not found')
             }
-            return employee
+            // return employee
+            return new SerializationEmployee(employee) 
         } catch (e) {
             console.log(e)
         }

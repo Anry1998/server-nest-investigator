@@ -12,7 +12,7 @@ export declare class TokenService {
         accessToken: string;
         refreshToken: string;
     }>;
-    saveRefreshTokenAfterRefresh(tokenid: number, refreshToken: string): Promise<void>;
+    saveTokenAfterRefresh(tokenid: number, refreshToken: string): Promise<void>;
     saveRefreshToken(employeeId: number, refreshToken: string): Promise<void>;
     validateAccessToken(token: string): any;
     validateRefreshToken(token: string): any;

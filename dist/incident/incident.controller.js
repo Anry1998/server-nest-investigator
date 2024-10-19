@@ -16,7 +16,7 @@ exports.IncidentController = void 0;
 const common_1 = require("@nestjs/common");
 const create_incident_dto_1 = require("./dto/create-incident.dto");
 const incident_service_1 = require("./incident.service");
-const public_decorator_1 = require("../auth/decorators/public.decorator");
+const role_1 = require("../auth/decorators/role");
 let IncidentController = class IncidentController {
     constructor(incidentService) {
         this.incidentService = incidentService;
@@ -26,10 +26,7 @@ let IncidentController = class IncidentController {
         return incident;
     }
     async test() {
-        return "erererer";
-    }
-    async test2() {
-        return "erererer";
+        return "test";
     }
 };
 exports.IncidentController = IncidentController;
@@ -41,19 +38,13 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], IncidentController.prototype, "createIncident", null);
 __decorate([
-    (0, public_decorator_1.Public)(),
     (0, common_1.Get)('/test'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], IncidentController.prototype, "test", null);
-__decorate([
-    (0, common_1.Get)('/test2'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], IncidentController.prototype, "test2", null);
 exports.IncidentController = IncidentController = __decorate([
+    (0, role_1.Role)("1", '2', '3'),
     (0, common_1.Controller)('incident'),
     __metadata("design:paramtypes", [incident_service_1.IncidentService])
 ], IncidentController);

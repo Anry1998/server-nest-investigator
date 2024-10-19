@@ -47,7 +47,7 @@ export class TokenService {
         return {accessToken, refreshToken} 
     }
 
-    async saveRefreshTokenAfterRefresh(tokenid: number, refreshToken: string) {
+    async saveTokenAfterRefresh(tokenid: number, refreshToken: string) {
         this.tokenRepository.update({id: tokenid }, { refreshToken: refreshToken });
     }
 

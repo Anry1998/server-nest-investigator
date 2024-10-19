@@ -14,12 +14,12 @@ import { CrudEmployeeService } from '../create-employee/crud-employee.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ Token]), 
+    TypeOrmModule.forFeature([Token]), 
     CrudEmployeeModule,
     JwtModule
   ],
   controllers: [AuthController],
-  providers: [AuthService, TokenService,  AccessTokenStrategy],
+  providers: [AuthService, TokenService],
   exports: [AuthService, TokenService],
 })
 export class AuthModule {} 

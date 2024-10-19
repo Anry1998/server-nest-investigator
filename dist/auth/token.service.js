@@ -36,7 +36,7 @@ let TokenService = class TokenService {
         });
         return { accessToken, refreshToken };
     }
-    async saveRefreshTokenAfterRefresh(tokenid, refreshToken) {
+    async saveTokenAfterRefresh(tokenid, refreshToken) {
         this.tokenRepository.update({ id: tokenid }, { refreshToken: refreshToken });
     }
     async saveRefreshToken(employeeId, refreshToken) {

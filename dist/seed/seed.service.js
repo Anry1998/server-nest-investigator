@@ -72,7 +72,7 @@ let SeedService = class SeedService {
     async createExampleEmployes() {
         const postData = [
             { email: 'andrey.britvin.983@mail.ru', password: 'Aa79628775438!', organid: 1, postid: 1, divisionid: 1, },
-            { email: 'employee2@.mail.ru', password: 'password', organid: 1, divisionid: 1, postid: 1 },
+            { email: 'andrey.britvin.98@mail.ru', password: 'Aa79628775438!', organid: 1, divisionid: 1, postid: 1 },
         ];
         try {
             for (let i = 0; i < postData.length; i++) {

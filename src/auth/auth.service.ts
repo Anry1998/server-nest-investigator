@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ClassSerializerInterceptor, HttpException, HttpStatus, Injectable, UseInterceptors } from '@nestjs/common';
 
 import { hash, compare } from 'bcrypt';
 import { CrudEmployeeService } from '../create-employee/crud-employee.service';
@@ -7,6 +7,7 @@ import { TokenService } from './token.service';
 import { LoginDto } from './dto/login.dto';
 import { RegistrationDto } from './dto/register.dto';
 import { InvalidCredentialsException } from './exceptions/invalid credentials.exception';
+import { SerializationEmployee } from 'src/create-employee/entity/employee.model';
 
 export interface JWTTokens {
   accessToken: string;
@@ -34,7 +35,7 @@ export class AuthService {
     return hash(password, 10);
   }
   private comparePassword(userDtoPassword: string, userPassword: string): Promise<boolean> {
-    return compare(userDtoPassword, userPassword);
+    return compare(userDtoPassword, userPassword)
   }
 
   async registration(userDto: RegistrationDto) { 
@@ -42,17 +43,16 @@ export class AuthService {
     if (condidate) {
       throw new InvalidCredentialsException(`Пользователь с таким email: ${userDto.email} уже существует`)
       //  throw new HttpException(`Пользователь с таким email: ${userDto.email} уже существует`, HttpStatus.BAD_REQUEST)
-    }
+    } 
     const hashPassword = await this.hashPassword(userDto.password)
     const employee = await this.crudEmployeeService.createEmployee({...userDto, password: hashPassword})
+    const employeeEnd = await this.crudEmployeeService.getEmployeeById(employee.id)
     const abbreviatedPostList = this.abbreviatedPostList(employee.post)
-    console.log(employee.organId)
     const tokens = await this.tokenService.generateTokens({id: employee.id, email: employee.email, posts: abbreviatedPostList ,organId: employee.organId, divisionId: employee.divisionId} )
     await this.tokenService.saveRefreshToken(employee.id, tokens.refreshToken)
-    delete condidate.password
-    return {...tokens, ...condidate}   
+    delete employeeEnd.password
+    return {...tokens, ...employeeEnd}   
   }
-
 
   async login(userDto: LoginDto) {
     const condidate = await this.crudEmployeeService.getEmployeeByEmail(userDto.email)
@@ -71,6 +71,7 @@ export class AuthService {
       tokens.refreshToken
     )
     delete condidate.password
+    // const serializationCondidate = new SerializationEmployee(condidate)
     return {...tokens, ...condidate}
   }
 
@@ -85,13 +86,17 @@ export class AuthService {
     const employeeData = await this.tokenService.validateRefreshToken(refreshToken)
     const employee = await this.crudEmployeeService.getEmployeeById(employeeData.payload.id)
     const tokenFromDb = await this.tokenService.findRefreshToken(refreshToken) 
-    if (!employeeData || !tokenFromDb) {
+    if (!employeeData || !tokenFromDb || !employee) {
       throw new HttpException('Ошибка авторизации', HttpStatus.FORBIDDEN)
     }
-    const tokens = await this.tokenService.generateTokens({id: employeeData.id, email: employeeData.email, posts: employeeData.post, organId: employeeData.organId, divisionId: employeeData.divisionId})
-    await this.tokenService.saveRefreshTokenAfterRefresh(tokenFromDb.id, tokens.refreshToken)
+    const tokens = await this.tokenService.generateTokens({id: employeeData.payload.id, email: employeeData.payload.email, posts: employeeData.payload.post, organId: employeeData.payload.organId, divisionId: employeeData.payload.divisionId})
+    await this.tokenService.saveTokenAfterRefresh(tokenFromDb.id, tokens.refreshToken)
     delete employee.password
     return {...tokens, ...employee}
+  }
+
+  async getEmployeeId(refreshToken: string) {
+
   }
 
   // constructor(

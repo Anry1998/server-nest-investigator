@@ -23,6 +23,8 @@ export declare class AuthService {
         createTime: Date;
         post: import("../position-employee/entity/position-employee.model").PositionEmployee[];
         incidents: import("../incident/entity/incident.model").Incident[];
+        chats: import("src/create-employee/entity/employee.model").Employee[];
+        messagers: import("../chats/entity/message.model").Messagers[];
         accessToken: string;
         refreshToken: string;
     }>;
@@ -36,6 +38,8 @@ export declare class AuthService {
         createTime: Date;
         post: import("../position-employee/entity/position-employee.model").PositionEmployee[];
         incidents: import("../incident/entity/incident.model").Incident[];
+        chats: import("src/create-employee/entity/employee.model").Employee[];
+        messagers: import("../chats/entity/message.model").Messagers[];
         accessToken: string;
         refreshToken: string;
     }>;
@@ -50,7 +54,10 @@ export declare class AuthService {
         createTime: Date;
         post: import("../position-employee/entity/position-employee.model").PositionEmployee[];
         incidents: import("../incident/entity/incident.model").Incident[];
+        chats: import("src/create-employee/entity/employee.model").Employee[];
+        messagers: import("../chats/entity/message.model").Messagers[];
         accessToken: string;
         refreshToken: string;
     }>;
+    getEmployeeId(refreshToken: string): Promise<void>;
 }

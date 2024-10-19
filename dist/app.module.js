@@ -26,14 +26,17 @@ const organ_module_1 = require("./organ/organ.module");
 const seed_module_1 = require("./seed/seed.module");
 const document_module_1 = require("./document/document.module");
 const document_model_1 = require("./document/entity/document.model");
-const app_gateway_1 = require("./app/app.gateway");
+const chat_module_1 = require("./chats/chat.module");
+const chat_model_1 = require("./chats/entity/chat.model");
+const message_model_1 = require("./chats/entity/message.model");
+const test_model_1 = require("./test/entity/test.model");
+const socket_id_model_1 = require("./chats/entity/socket-id.model");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            (0, common_1.forwardRef)(() => config_1.ConfigModule.forRoot({ isGlobal: true, validate: env_validation_1.validate })),
             config_1.ConfigModule.forRoot({ isGlobal: true, validate: env_validation_1.validate }),
             typeorm_1.TypeOrmModule.forRootAsync({
                 imports: [config_1.ConfigModule],
@@ -52,6 +55,10 @@ exports.AppModule = AppModule = __decorate([
                         employee_model_1.Employee,
                         token_model_1.Token,
                         document_model_1.Document,
+                        chat_model_1.Chat,
+                        message_model_1.Messagers,
+                        test_model_1.EmployeeTest,
+                        socket_id_model_1.SocketId,
                     ],
                     synchronize: true,
                     logging: configService.get('DB_LOGGING'),
@@ -65,10 +72,11 @@ exports.AppModule = AppModule = __decorate([
             incident_module_1.IncidentModule,
             organ_module_1.OrganModule,
             seed_module_1.SeedModule,
-            document_module_1.DocumentModule
+            document_module_1.DocumentModule,
+            chat_module_1.ChatModule,
         ],
         controllers: [],
-        providers: [app_gateway_1.AppGateway],
+        providers: [],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

@@ -12,7 +12,6 @@ const typeorm_1 = require("@nestjs/typeorm");
 const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
 const jwt_1 = require("@nestjs/jwt");
-const access_token_strategy_1 = require("./passport-strategy/access-token.strategy");
 const token_model_1 = require("./entity/token.model");
 const crud_employee_module_1 = require("../create-employee/crud-employee.module");
 const token_service_1 = require("./token.service");
@@ -27,7 +26,7 @@ exports.AuthModule = AuthModule = __decorate([
             jwt_1.JwtModule
         ],
         controllers: [auth_controller_1.AuthController],
-        providers: [auth_service_1.AuthService, token_service_1.TokenService, access_token_strategy_1.AccessTokenStrategy],
+        providers: [auth_service_1.AuthService, token_service_1.TokenService],
         exports: [auth_service_1.AuthService, token_service_1.TokenService],
     })
 ], AuthModule);
